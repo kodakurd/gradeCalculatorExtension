@@ -1,22 +1,17 @@
 # Karakterkalkulator for StudentWeb
-
 En nettleserutvidelse som automatisk beregner ditt vektede karaktersnitt direkte fra StudentWeb. Utviklet av en OsloMet-student, for studenter.
-
 ---
 
 ## Hva gjør den?
 
 Utvidelsen leser karakterene dine fra resultat-siden i StudentWeb og regner ut det vektede snittet basert på studiepoeng — akkurat slik universitetet gjør det, men uten at du trenger å gjøre det manuelt.
-
 - Beregner vektet snitt automatisk basert på studiepoeng
 - Håndterer kontinuasjonseksamener riktig (beholder beste karakter)
 - Viser full emneoversikt med karakter og studiepoeng
 - Ignorerer emner med Bestått/Ikke bestått i snittet
-
 ---
 
 ## Installasjon
-
 Utvidelsen er ikke publisert i Chrome Web Store ennå, så den må lastes inn manuelt. Dette tar ca. 2 minutter.
 
 **Steg 1 — Last ned filene**
