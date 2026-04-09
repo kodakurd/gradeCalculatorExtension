@@ -47,28 +47,24 @@ Utvidelsen er nå installert og vises som et blått K-ikon i verktøylinjen din.
 ---
 ## Hvordan beregnes snittet?
 
-Den norske karakterskalaen A–E konverteres til tallverdier:
+Karakterskalaen A–E konverteres til tallverdier: A=5, B=4, C=3, D=2, E=1.
 
-| Karakter | Verdi |
-|----------|-------|
-| A | 5 |
-| B | 4 |
-| C | 3 |
-| D | 2 |
-| E | 1 |
+Snittet regnes ut som sum(karakter × studiepoeng) delt på sum(studiepoeng).
 
-Vektet snitt = sum(karakter × studiepoeng) / sum(studiepoeng)
-Emner med karakteren F, Bestått eller Ikke bestått teller ikke med i snittet, men studiepoengene for beståtte emner telles med i totalen.
+Emner med F, Bestått eller Ikke bestått teller ikke med i snittet, men studiepoengene for beståtte emner telles med i totalen.
 ---
 
 ## Fungerer den for mitt universitet?
+
 Utvidelsen er utviklet og testet på **OsloMet**. StudentWeb brukes av mange norske universiteter og høyskoler, men HTML-strukturen kan variere noe. Om utvidelsen ikke fungerer for deg, er du velkommen til å åpne et Issue her på GitHub med navnet på ditt lærested.
 ---
 
 ## Bidra
+
 Fant du en feil, eller studerer du ved et annet universitet der den ikke fungerer? Åpne gjerne et Issue eller send en Pull Request. Jo flere som bidrar, jo flere studenter kan bruke den.
 ---
 
 ## Kontakt
+
 Utviklet som et hobbyprosjekt. Har du spørsmål eller tilbakemeldinger, åpne et Issue på GitHub.
 ---
