@@ -46,14 +46,13 @@ Utvidelsen er nå installert og vises som et blått K-ikon i verktøylinjen din.
 
 ---
 Den norske karakterskalaen A–E konverteres til tallverdier:
-
 | Karakter | Verdi |
   | A |      | 5 |
   | B |      | 4 |
   | C |      | 3 |
   | D |      | 2 |
   | E |      | 1 |
-
+---
 
 Vektet snitt = sum(karakter × studiepoeng) / sum(studiepoeng)
 Emner med karakteren F, Bestått eller Ikke bestått teller ikke med i snittet, men studiepoengene for beståtte emner telles med i totalen.
