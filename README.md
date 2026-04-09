@@ -45,7 +45,7 @@ Utvidelsen er nå installert og vises som et blått K-ikon i verktøylinjen din.
 
 ## Bruk
 
-1. Logg inn på StudentWeb på [student.oslomet.no](https://student.oslomet.no)
+1. Logg inn på StudentWeb på [student.oslomet.no](https://student.oslomet.no) // eller på diit unviersitets Studentweb portal.
 2. Naviger til **Resultater** i menyen
 3. Klikk på det blå **K-ikonet** i nettleserens verktøylinje
 4. Karaktersnittet ditt vises automatisk
