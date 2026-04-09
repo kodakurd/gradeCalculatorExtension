@@ -55,10 +55,10 @@ Den norske karakterskalaen A–E konverteres til tallverdier:
 | D | 2 |
 | E | 1 |
 
-Vektet snitt = sum(karakter × studiepoeng) / sum(studiepoeng)
+## Vektet snitt = sum(karakter × studiepoeng) / sum(studiepoeng)
 ---
 
-Vektet snitt = sum(karakter × studiepoeng) / sum(studiepoeng)
+## Vektet snitt = sum(karakter × studiepoeng) / sum(studiepoeng)
 Emner med karakteren F, Bestått eller Ikke bestått teller ikke med i snittet, men studiepoengene for beståtte emner telles med i totalen.
 ---
 
@@ -72,3 +72,4 @@ Fant du en feil, eller studerer du ved et annet universitet der den ikke fungere
 
 ## Kontakt
 Utviklet som et hobbyprosjekt. Har du spørsmål eller tilbakemeldinger, åpne et Issue på GitHub.
+---
