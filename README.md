@@ -86,4 +86,4 @@ Fant du en feil, eller studerer du ved et annet universitet der den ikke fungere
 
 ## Kontakt
 
-Laget som et hobbyprosjekt da jeg selv ønsker å ha oversikt over mitt karaktersnitt. Har du spørsmål eller tilbakemeldinger, åpne et Issue på GitHub.
+Laget som et hobbyprosjekt da jeg selv ønsker å ha oversikt over mitt karaktersnitt, det er brukt AI for hjelp under utvikling av prosjektet. Har du spørsmål eller tilbakemeldinger, åpne et Issue på GitHub.
