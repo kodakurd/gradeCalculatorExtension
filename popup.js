@@ -1,12 +1,13 @@
-
-const GRADE_VAL    = { A: 5, B: 4, C: 3, D: 2, E: 1 };
-const GRADE_COLORS = { A: '#1a7a4a', B: '#2271c3', C: '#6b4fc2', D: '#c27a10', E: '#c24010', F: '#999' };
+const GRADE_VAL       = { A: 5, B: 4, C: 3, D: 2, E: 1 };
+const GRADE_COLORS    = { A: '#1a7a4a', B: '#2271c3', C: '#6b4fc2', D: '#c27a10', E: '#c24010', F: '#999' };
 const ALLE_KARAKTERER = ['A', 'B', 'C', 'D', 'E', 'F', 'Bestått', 'Ikke bestått'];
 
-// Global state
-let alleResultater        = [];
-let utelatt               = new Set();
-let overstyrteKarakterer  = {};
+let alleResultater       = [];
+let utelatt              = new Set();
+let overstyrteKarakterer = {};
+
+// Returnerer gjeldende karakter for et emne (original eller overstyrt av bruker)
+const gjeldendeKarakter = (r) => overstyrteKarakterer[r.emne] ?? r.karakter;
 
 // ─── Bootstrap ───────────────────────────────────────────────────────────────
 
@@ -17,7 +18,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (injected && injected[0]?.result?.resultater?.length > 0) {
                 alleResultater = injected[0].result.resultater;
                 chrome.storage.local.get(['utelatt', 'overstyrte'], (lagret) => {
-                    if (lagret.utelatt)   utelatt = new Set(lagret.utelatt);
+                    if (lagret.utelatt)    utelatt = new Set(lagret.utelatt);
                     if (lagret.overstyrte) overstyrteKarakterer = lagret.overstyrte;
                     visOversikt();
                     oppdaterSnittseksjon();
@@ -35,18 +36,20 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 function hentData() {
     const GRADE_VAL = { A: 5, B: 4, C: 3, D: 2, E: 1 };
     const resultater = [];
-    const sett       = new Map(); // emne → index, for deduplication
+    const sett       = new Map();
+
+    // Henter siste ikke-tomme tekstlinje — hopper over aria-hidden kolonnetitler
+    const lastLine = el => el?.innerText.split('\n').map(s => s.trim()).filter(Boolean).pop();
 
     function leggTil(emne, karakter, studiepoeng) {
-        if (!emne || !karakter) return;
-        emne     = emne.trim();
-        karakter = karakter.trim();
+        emne     = emne?.trim();
+        karakter = karakter?.trim();
         if (!emne || !karakter) return;
 
         if (sett.has(emne)) {
-            const idx      = sett.get(emne);
-            const gammel   = GRADE_VAL[resultater[idx].karakter] ?? 0;
-            const ny       = GRADE_VAL[karakter]                 ?? 0;
+            const idx    = sett.get(emne);
+            const gammel = GRADE_VAL[resultater[idx].karakter] ?? 0;
+            const ny     = GRADE_VAL[karakter]                 ?? 0;
             if (ny > gammel) resultater[idx] = { emne, karakter, studiepoeng };
         } else {
             sett.set(emne, resultater.length);
@@ -54,59 +57,38 @@ function hentData() {
         }
     }
 
-    // ── 1. Interne resultater (standard StudentWeb-klasser, gjelder alle FS-institusjoner) ──
+    // Interne resultater (standard StudentWeb-klasser, gjelder alle FS-institusjoner)
     document.querySelectorAll('tr.resultatTop, tr.none').forEach((rad) => {
-        const infoLinjer = rad.querySelectorAll('td.col2Emne div.infoLinje');
+        const infoLinjer  = rad.querySelectorAll('td.col2Emne div.infoLinje');
         const emne = infoLinjer.length > 0
             ? infoLinjer[infoLinjer.length - 1].innerText.trim()
             : rad.querySelector('td.col2Emne')?.innerText.trim()
                   .split('\n').filter(l => l.trim())[0]?.trim();
 
-        const karakter   = rad.querySelector('td.col6Resultat div.infoLinje span')?.innerText.trim();
-        const spTekst    = rad.querySelector('td.col7Studiepoeng span')?.innerText.trim();
+        const karakter    = rad.querySelector('td.col6Resultat div.infoLinje span')?.innerText.trim();
+        const spTekst     = rad.querySelector('td.col7Studiepoeng span')?.innerText.trim();
         const studiepoeng = parseFloat(spTekst?.replace(',', '.'));
 
         leggTil(emne, karakter, studiepoeng);
     });
 
-    // ── 2. Eksterne resultater (andre universiteter) ──────────────────────────
-    // StudentWeb bruker eksakte kolonneklasser: col2EksternEmne, col3EksternResultat, col4EksternStudiepoeng
+    // Eksterne resultater (andre universiteter)
     document.querySelectorAll('td.col2EksternEmne').forEach((emneEl) => {
         const rad = emneEl.closest('tr');
         if (!rad) return;
 
-        // Emnenavn – siste infoLinje inneholder fullt navn + universitetsnavn
-        const infoLinjer = emneEl.querySelectorAll('div.infoLinje');
+        const infoLinjer  = emneEl.querySelectorAll('div.infoLinje');
         const emne = infoLinjer.length > 0
             ? infoLinjer[infoLinjer.length - 1].innerText.trim()
-            : emneEl.innerText.split('\n').map(s => s.trim()).filter(s => s).pop();
+            : lastLine(emneEl);
 
-        // Karakter – siste ikke-tomme tekstlinje (hopp over aria-hidden "Resultat"-tittelen)
-        const karakterEl = rad.querySelector('td.col3EksternResultat');
-        const karakter = karakterEl?.innerText
-            .split('\n').map(s => s.trim()).filter(s => s).pop();
-
-        // Studiepoeng – siste ikke-tomme tekstlinje (hopp over "Studiepoeng"-span)
-        const spEl = rad.querySelector('td.col4EksternStudiepoeng');
-        const spTekst = spEl?.innerText
-            .split('\n').map(s => s.trim()).filter(s => s).pop();
-        const studiepoeng = parseFloat(spTekst?.replace(',', '.'));
+        const karakter    = lastLine(rad.querySelector('td.col3EksternResultat'));
+        const studiepoeng = parseFloat(lastLine(rad.querySelector('td.col4EksternStudiepoeng'))?.replace(',', '.'));
 
         leggTil(emne, karakter, studiepoeng);
     });
 
-    // Beregn vektet snitt
-    let vektetSum = 0, totalSp = 0;
-    resultater.forEach((r) => {
-        const verdi = GRADE_VAL[r.karakter];
-        if (verdi !== undefined && r.studiepoeng) {
-            vektetSum += verdi * r.studiepoeng;
-            totalSp   += r.studiepoeng;
-        }
-    });
-
-    const snitt = totalSp > 0 ? (vektetSum / totalSp).toFixed(2) : null;
-    return { resultater, snitt, totalSp };
+    return { resultater };
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -131,38 +113,35 @@ function beregnSnitt() {
     let vektetSum = 0, totalSp = 0;
     alleResultater.forEach((r) => {
         if (utelatt.has(r.emne)) return;
-        const karakter = overstyrteKarakterer[r.emne] ?? r.karakter;
-        const verdi    = GRADE_VAL[karakter];
+        const verdi = GRADE_VAL[gjeldendeKarakter(r)];
         if (verdi !== undefined && r.studiepoeng) {
             vektetSum += verdi * r.studiepoeng;
             totalSp   += r.studiepoeng;
         }
     });
-    return totalSp > 0 ? (vektetSum / totalSp).toFixed(2) : null;
+    return totalSp > 0 ? vektetSum / totalSp : null;
 }
 
 // ─── Snitt-seksjon (alltid synlig, oppdateres live) ──────────────────────────
 
 function oppdaterSnittseksjon() {
-    const snitt = beregnSnitt();
-    document.getElementById('avg-num').textContent = snitt ?? '—';
-
+    const snitt    = beregnSnitt();
     const letterEl = document.getElementById('avg-letter');
-    if (snitt) {
-        const bokstav = bokstavFraTall(parseFloat(snitt));
-        letterEl.textContent  = bokstav;
-        letterEl.style.color  = GRADE_COLORS[bokstav] ?? '#555';
+
+    document.getElementById('avg-num').textContent = snitt != null ? snitt.toFixed(2) : '—';
+
+    if (snitt != null) {
+        const bokstav        = bokstavFraTall(snitt);
+        letterEl.textContent = bokstav;
+        letterEl.style.color = GRADE_COLORS[bokstav] ?? '#555';
     } else {
         letterEl.textContent = '';
     }
 
-    const aktive   = alleResultater.filter(r => !utelatt.has(r.emne));
+    const aktive    = alleResultater.filter(r => !utelatt.has(r.emne));
     const beståttSp = aktive
-        .filter(r => {
-            const k = overstyrteKarakterer[r.emne] ?? r.karakter;
-            return k !== 'F' && k !== 'Ikke bestått';
-        })
-        .reduce((s, r) => s + (r.studiepoeng || 0), 0);
+        .filter(r => { const k = gjeldendeKarakter(r); return k !== 'F' && k !== 'Ikke bestått'; })
+        .reduce((sum, r) => sum + (r.studiepoeng || 0), 0);
 
     document.getElementById('avg-meta').textContent =
         `${beståttSp} studiepoeng · ${aktive.length} av ${alleResultater.length} emner`;
@@ -171,7 +150,6 @@ function oppdaterSnittseksjon() {
 // ─── Oversikt-fane ───────────────────────────────────────────────────────────
 
 function visOversikt() {
-    // Karakterfordeling-bar
     const bar    = document.getElementById('grade-bar');
     const legend = document.getElementById('bar-legend');
     bar.innerHTML    = '';
@@ -180,13 +158,14 @@ function visOversikt() {
     const fordeling = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
     const aktive    = alleResultater.filter(r => !utelatt.has(r.emne));
     aktive.forEach(r => {
-        const k = overstyrteKarakterer[r.emne] ?? r.karakter;
+        const k = gjeldendeKarakter(r);
         if (k in fordeling) fordeling[k]++;
     });
 
     const total = aktive.length;
     Object.entries(fordeling).forEach(([g, count]) => {
         if (count === 0) return;
+
         const seg = document.createElement('div');
         seg.className        = 'bar-seg';
         seg.style.flex       = count / total;
@@ -199,12 +178,11 @@ function visOversikt() {
         legend.appendChild(item);
     });
 
-    // Emneliste
     const tabell = document.getElementById('tabell');
     tabell.innerHTML = '';
     alleResultater.forEach((r) => {
         const erUtelatt = utelatt.has(r.emne);
-        const karakter  = overstyrteKarakterer[r.emne] ?? r.karakter;
+        const karakter  = gjeldendeKarakter(r);
         const gradClass = karakter in GRADE_COLORS ? `grade-${karakter}` : 'grade-other';
 
         const rad = document.createElement('div');
@@ -225,13 +203,13 @@ function visRedigering() {
     liste.innerHTML = '';
 
     alleResultater.forEach((r, i) => {
-        const erUtelatt    = utelatt.has(r.emne);
-        const gjeldendeKar = overstyrteKarakterer[r.emne] ?? r.karakter;
-        const erEndret     = overstyrteKarakterer[r.emne] !== undefined;
-        const id           = `emne-${i}`;
+        const erUtelatt = utelatt.has(r.emne);
+        const gjeldende = gjeldendeKarakter(r);
+        const erEndret  = r.emne in overstyrteKarakterer;
+        const id        = `emne-${i}`;
 
         const opsjoner = ALLE_KARAKTERER.map(k =>
-            `<option value="${k}"${k === gjeldendeKar ? ' selected' : ''}>${k}</option>`
+            `<option value="${k}"${k === gjeldende ? ' selected' : ''}>${k}</option>`
         ).join('');
 
         const rad = document.createElement('div');
@@ -244,7 +222,6 @@ function visRedigering() {
             </select>
         `;
 
-        // Toggle inkludering
         rad.querySelector('input').addEventListener('change', (e) => {
             if (e.target.checked) {
                 utelatt.delete(r.emne);
@@ -257,7 +234,6 @@ function visRedigering() {
             oppdaterSnittseksjon();
         });
 
-        // Endre karakter
         rad.querySelector('select').addEventListener('change', (e) => {
             if (e.target.value === r.karakter) {
                 delete overstyrteKarakterer[r.emne];
@@ -276,9 +252,10 @@ function visRedigering() {
 
 // ─── Tab-navigasjon ──────────────────────────────────────────────────────────
 
-document.querySelectorAll('.tab').forEach((tab) => {
+const tabEls = document.querySelectorAll('.tab');
+tabEls.forEach((tab) => {
     tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tabEls.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
 
         const fane = tab.dataset.tab;
