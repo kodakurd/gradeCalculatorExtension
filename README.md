@@ -1,17 +1,19 @@
 # Karakterkalkulator for StudentWeb
 
-En nettleserutvidelse som automatisk beregner ditt vektede karaktersnitt direkte fra StudentWeb. Utviklet av en OsloMet-student, for studenter.
+En nettleserutvidelse som automatisk beregner ditt vektede karaktersnitt direkte fra StudentWeb. Laget av en OsloMet-student som ble lei av å gjøre det manuelt i Excel.
 
 ---
 
 ## Hva gjør den?
 
-Utvidelsen leser karakterene dine fra resultat-siden i StudentWeb og regner ut det vektede snittet basert på studiepoeng — akkurat slik universitetet gjør det, men uten at du trenger å gjøre det manuelt.
+Utvidelsen leser karakterene dine fra resultat-siden i StudentWeb og regner ut det vektede snittet basert på studiepoeng — akkurat slik universitetet gjør det.
 
 - Beregner vektet snitt automatisk basert på studiepoeng
+- Henter både interne resultater og eksterne resultater fra andre universiteter
 - Håndterer kontinuasjonseksamener riktig (beholder beste karakter)
 - Viser full emneoversikt med karakter og studiepoeng
-- Ignorerer emner med Bestått/Ikke bestått i snittet
+- Emner med Bestått/Ikke bestått teller ikke med i snittet
+- **Rediger-fane:** ekskluder emner du ikke vil ha med, eller endre en karakter for å se hva snittet ditt hadde blitt
 
 ---
 
@@ -45,10 +47,12 @@ Utvidelsen er nå installert og vises som et blått K-ikon i verktøylinjen din.
 
 ## Bruk
 
-1. Logg inn på StudentWeb på [student.oslomet.no](https://student.oslomet.no) // eller på diit unviersitets Studentweb portal.
+1. Logg inn på StudentWeb på [fsweb.no/studentweb](https://fsweb.no/studentweb) eller via ditt universitets portal
 2. Naviger til **Resultater** i menyen
 3. Klikk på det blå **K-ikonet** i nettleserens verktøylinje
 4. Karaktersnittet ditt vises automatisk
+
+Vil du justere hva som regnes med? Gå til **Rediger**-fanen for å ekskludere enkeltfag eller endre en karakter.
 
 ---
 
@@ -56,7 +60,11 @@ Utvidelsen er nå installert og vises som et blått K-ikon i verktøylinjen din.
 
 Karakterskalaen A–E konverteres til tallverdier: A=5, B=4, C=3, D=2, E=1.
 
-Snittet regnes ut som sum(karakter × studiepoeng) delt på sum(studiepoeng).
+Snittet regnes ut som:
+
+```
+sum(karakter × studiepoeng) / sum(studiepoeng)
+```
 
 Emner med F, Bestått eller Ikke bestått teller ikke med i snittet, men studiepoengene for beståtte emner telles med i totalen.
 
@@ -64,7 +72,9 @@ Emner med F, Bestått eller Ikke bestått teller ikke med i snittet, men studiep
 
 ## Fungerer den for mitt universitet?
 
-Utvidelsen er utviklet og testet på **OsloMet**. StudentWeb brukes av mange norske universiteter og høyskoler, men HTML-strukturen kan variere noe. Om utvidelsen ikke fungerer for deg, er du velkommen til å åpne et Issue her på GitHub med navnet på ditt lærested.
+Ja — utvidelsen er bygget for å fungere med alle norske universiteter og høyskoler som bruker StudentWeb (FS). Den henter både resultater fra din nåværende institusjon og eventuelle eksterne resultater fra andre steder du har studert.
+
+Den er utviklet og testet på OsloMet, men siden alle FS-institusjoner bruker samme HTML-struktur skal den fungere uansett hvor du studerer. Hvis den likevel ikke fungerer for deg, er du velkommen til å åpne et Issue her på GitHub med navnet på ditt lærested.
 
 ---
 
@@ -76,4 +86,4 @@ Fant du en feil, eller studerer du ved et annet universitet der den ikke fungere
 
 ## Kontakt
 
-Utviklet som et hobbyprosjekt. Har du spørsmål eller tilbakemeldinger, åpne et Issue på GitHub.
+Laget som et hobbyprosjekt med hjelp av Claude AI. Har du spørsmål eller tilbakemeldinger, åpne et Issue på GitHub.
