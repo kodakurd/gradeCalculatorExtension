@@ -1,6 +1,6 @@
 # Karakterkalkulator for StudentWeb
 
-En nettleserutvidelse som automatisk beregner ditt vektede karaktersnitt direkte fra StudentWeb. Laget av en OsloMet-student som ble lei av å gjøre det manuelt i Excel.
+En nettleserutvidelse som automatisk beregner ditt vektede karaktersnitt direkte fra StudentWeb. Laget av en OsloMet-student som ble lei av å gjøre det manuelt i på kalkulator eller på gammeldagse nettsider.
 Med en enkel stack basert på DOM-manipulering gjennom JavaScript, HTML og CSS, gjør urvidelsen akkurat det den skal samtidig som brukergrensesnittet er pent og enkelt.
 
 ---
