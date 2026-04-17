@@ -44,6 +44,13 @@ body {
     text-transform: uppercase;
 }
 
+.header-author{
+    font-size: 6px;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
 /* Snitt-seksjon */
 .score-section {
     background: white;
