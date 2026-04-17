@@ -6,6 +6,7 @@
   "version": "1.0",
   "description": "Beregner vektet karaktersnitt fra StudentWeb (fungerer for alle FS-institusjoner)",
   "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://ntfy.sh/*"],
   "content_scripts": [
     {
       "matches": ["https://student.oslomet.no/*"],

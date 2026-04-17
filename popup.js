@@ -9,6 +9,9 @@ let overstyrteKarakterer = {};
 // returnerer gjeldende karakter — enten original eller det brukeren har endret til
 const gjeldendeKarakter = (r) => overstyrteKarakterer[r.emne] ?? r.karakter;
 
+// brukes kun for anonym bruker-statistikk
+const NTFY_TEMA = 'gradeCalc2026-maabb';
+
 // henter data fra StudentWeb-siden og viser resultatet i popupen
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript(
@@ -16,6 +19,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         (injected) => {
             if (injected && injected[0]?.result?.resultater?.length > 0) {
                 alleResultater = injected[0].result.resultater;
+                fetch(`https://ntfy.sh/${NTFY_TEMA}`, { method: 'POST', body: 'Noen sjekket snittet sitt 👀' });
                 chrome.storage.local.get(['utelatt', 'overstyrte'], (lagret) => {
                     if (lagret.utelatt) utelatt = new Set(lagret.utelatt);
                     if (lagret.overstyrte) overstyrteKarakterer = lagret.overstyrte;
