@@ -1,6 +1,7 @@
 # Karakterkalkulator for StudentWeb
 
-En nettleserutvidelse som automatisk beregner ditt vektede karaktersnitt direkte fra StudentWeb. Laget av en OsloMet-student som ble lei av å gjøre det manuelt i Excel.
+En nettleserutvidelse som automatisk beregner ditt vektede karaktersnitt direkte fra StudentWeb. Laget av en OsloMet-student som ble lei av å gjøre det manuelt på kalkulator eller på gammeldagse nettsider.
+Med en enkel stack basert på DOM-manipulering gjennom JavaScript, HTML og CSS, gjør utvidelsen akkurat det den skal samtidig som brukergrensesnittet er pent og enkelt.
 
 ---
 
@@ -49,7 +50,7 @@ Utvidelsen er nå installert og vises som et blått K-ikon i verktøylinjen din.
 
 1. Logg inn på StudentWeb på [fsweb.no/studentweb](https://fsweb.no/studentweb) eller via ditt universitets portal
 2. Naviger til **Resultater** i menyen
-3. Klikk på det blå **K-ikonet** i nettleserens verktøylinje
+3. Klikk på det blå **K-ikonet** i nettleserens verktøylinje, eller gjennom **Extensions** / **Utvidelser**.
 4. Karaktersnittet ditt vises automatisk
 
 Vil du justere hva som regnes med? Gå til **Rediger**-fanen for å ekskludere enkeltfag eller endre en karakter.
@@ -74,7 +75,7 @@ Emner med F, Bestått eller Ikke bestått teller ikke med i snittet, men studiep
 
 Ja — utvidelsen er bygget for å fungere med alle norske universiteter og høyskoler som bruker StudentWeb (FS). Den henter både resultater fra din nåværende institusjon og eventuelle eksterne resultater fra andre steder du har studert.
 
-Den er utviklet og testet på OsloMet, men siden alle FS-institusjoner bruker samme HTML-struktur skal den fungere uansett hvor du studerer. Hvis den likevel ikke fungerer for deg, er du velkommen til å åpne et Issue her på GitHub med navnet på ditt lærested.
+Den er utviklet og testet på OsloMet og UIO, men siden alle FS-institusjoner bruker samme HTML-struktur skal den fungere uansett hvor du studerer. Hvis den likevel ikke fungerer for deg, er du velkommen til å åpne et Issue her på GitHub med navnet på ditt lærested.
 
 ---
 
@@ -86,4 +87,4 @@ Fant du en feil, eller studerer du ved et annet universitet der den ikke fungere
 
 ## Kontakt
 
-Laget som et hobbyprosjekt med hjelp av Claude AI. Har du spørsmål eller tilbakemeldinger, åpne et Issue på GitHub.
+Laget som et hobbyprosjekt da jeg selv ønsker å ha oversikt over mitt karaktersnitt, det er brukt AI for hjelp under utvikling av prosjektet. Har du spørsmål eller tilbakemeldinger, åpne et Issue på GitHub.
